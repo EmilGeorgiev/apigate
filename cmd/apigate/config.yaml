@@ -1,0 +1,12 @@
+target_url: "http://example.com"
+basic_auth:
+  username: "admin"
+  password: "secret"
+oauth2:
+  enabled: true
+cors:
+  enabled: true
+ip_whitelisting:
+  enabled: true
+  ips:
+    - "127.0.0.1"
