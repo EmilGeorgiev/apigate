@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Config struct for YAML configuration
