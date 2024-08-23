@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
@@ -18,7 +18,7 @@ func main() {
 	// Define the HTTP handler
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Read the request payload
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "Unable to read request body", http.StatusBadRequest)
 			return
