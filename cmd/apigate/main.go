@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks"
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks/backendsecurity"
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks/consumersecurity"
@@ -24,6 +25,12 @@ func BuildMiddlewareChain(handler http.Handler, config *buildingblocks.Config) h
 	if config.IPWhitelisting != nil && config.IPWhitelisting.Enabled {
 		handler = consumersecurity.IPWhitelistingMiddleware(handler, config.IPWhitelisting)
 	}
+
+	return logging(handler, config.TargetURL)
+}
+
+func logging(handler http.Handler, targetURL string) http.Handler {
+	fmt.Println("Send request to the target server: ", targetURL)
 	return handler
 }
 
