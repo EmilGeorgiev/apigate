@@ -69,18 +69,18 @@ func getAccessToken(config *buildingblocks.OAuth2Config) (TokenResponse, error) 
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return TokenResponse{}, fmt.Errorf("failed to get a token: %v", body)
+		return TokenResponse{}, fmt.Errorf("failed to get a token: %d %v", resp.StatusCode, string(body))
 	}
 
-	var tokenResp TokenResponse
-	if err = json.Unmarshal(body, &tokenResp); err != nil {
+	var tResp TokenResponse
+	if err = json.Unmarshal(body, &tResp); err != nil {
 		return TokenResponse{}, fmt.Errorf("failed to unmarshal token response: %v", err)
 	}
 
-	if tokenResp.AccessToken == "" {
+	if tResp.AccessToken == "" {
 		return TokenResponse{}, errors.New("access token is empty")
 	}
-	return tokenResp, nil
+	return tResp, nil
 }
 
 type TokenResponse struct {

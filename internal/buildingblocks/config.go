@@ -22,10 +22,9 @@ type BasicAuthConfig struct {
 
 // OAuth2Config represents OAuth2 configuration
 type OAuth2Config struct {
-	Enabled      bool `yaml:"enabled"`
-	ClientID     string
-	ClientSecret string
-	TokenURL     string
+	ClientID     string `yaml:"client_id"`
+	ClientSecret string `yaml:"client_secret"`
+	TokenURL     string `yaml:"token_url"`
 }
 
 // CORSConfig represents CORS configuration

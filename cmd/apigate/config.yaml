@@ -1,12 +1,14 @@
-target_url: "http://example.com"
-basic_auth:
-  username: "admin"
-  password: "secret"
+target_url: "http://127.0.0.1:8080"
+#basic_auth:
+#  username: "admin"
+#  password: "secret"
 oauth2:
-  enabled: true
-cors:
-  enabled: true
-ip_whitelisting:
-  enabled: true
-  ips:
-    - "127.0.0.1"
+  client_id: "3c0bf402-d4ea-495c-9f5c-a09fcd0b8ce1"
+  client_secret: "84a8fd89-aa3d-4b39-85e6-92d89fc0faa6"
+  token_url: "http://localhost:8282/token"
+#cors:
+#  enabled: true
+#ip_whitelisting:
+#  enabled: true
+#  ips:
+#    - "127.0.0.1"

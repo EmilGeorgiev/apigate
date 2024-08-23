@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -17,6 +18,7 @@ type EchoRequest struct {
 func main() {
 	// Define the HTTP handler
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Handle new request")
 		// Read the request payload
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -51,6 +53,7 @@ func main() {
 		// Set the content type to application/json
 		w.Header().Set("Content-Type", "application/json")
 
+		fmt.Println("echo the request back to the client")
 		// Write the JSON response
 		w.Write(responseBytes)
 	})

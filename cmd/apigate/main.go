@@ -16,22 +16,27 @@ func BuildMiddlewareChain(handler http.Handler, config *buildingblocks.Config) h
 	if config.BasicAuth != nil {
 		handler = backendsecurity.BasicAuthMiddleware(handler, config.BasicAuth)
 	}
-	if config.OAuth2 != nil && config.OAuth2.Enabled {
+	if config.OAuth2 != nil {
+		fmt.Println("0000000000000")
 		handler = backendsecurity.OAuth2Middleware(handler, config.OAuth2)
 	}
-	if config.CORS != nil && config.CORS.Enabled {
+	if config.CORS != nil {
 		handler = consumersecurity.CORSMiddleware(handler, config.CORS)
 	}
-	if config.IPWhitelisting != nil && config.IPWhitelisting.Enabled {
+	if config.IPWhitelisting != nil {
 		handler = consumersecurity.IPWhitelistingMiddleware(handler, config.IPWhitelisting)
 	}
 
-	return logging(handler, config.TargetURL)
+	handler = logging(handler, config.TargetURL)
+
+	return handler
 }
 
-func logging(handler http.Handler, targetURL string) http.Handler {
-	fmt.Println("Send request to the target server: ", targetURL)
-	return handler
+func logging(next http.Handler, targetURL string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Send request to the target server: ", targetURL)
+		next.ServeHTTP(w, r)
+	})
 }
 
 func main() {
@@ -68,7 +73,7 @@ func main() {
 	handler := BuildMiddlewareChain(proxy, config)
 
 	// Start the server
-	port := "8080" // Port can be made configurable as well
+	port := "8181" // Port can be made configurable as well
 	log.Printf("Starting proxy server on port %s, forwarding to %s", port, config.TargetURL)
 	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
