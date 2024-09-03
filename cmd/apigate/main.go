@@ -5,6 +5,7 @@ import (
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks"
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks/backendsecurity"
 	"github.com/EmilGeorgiev/apigare/internal/buildingblocks/consumersecurity"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -13,6 +14,9 @@ import (
 
 func BuildMiddlewareChain(handler http.Handler, config *buildingblocks.Config) http.Handler {
 	// Add middleware based on the configuration
+
+	handler = buildingblocks.MetricsHandler(handler)
+
 	if config.BasicAuth != nil {
 		handler = backendsecurity.BasicAuthMiddleware(handler, config.BasicAuth)
 	}
@@ -72,10 +76,13 @@ func main() {
 	// Build the middleware chain
 	handler := BuildMiddlewareChain(proxy, config)
 
+	http.Handle("/metrics", promhttp.Handler())
+	http.Handle("/", handler)
+
 	// Start the server
 	port := "8181" // Port can be made configurable as well
 	log.Printf("Starting proxy server on port %s, forwarding to %s", port, config.TargetURL)
-	if err := http.ListenAndServe(":"+port, handler); err != nil {
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
